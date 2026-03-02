@@ -179,3 +179,9 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+missions.db          # Don't commit user mission data
+voices/clips/        # 300 wav files don't belong in git
+*.pyc
+__pycache__/
+config.local.yaml    # For personal settings you don't want public
