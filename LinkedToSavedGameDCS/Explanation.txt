@@ -1,0 +1,1 @@
+These are junctioned to the user\Saved Games\DCS folder so that AI tools can make all changes required to scripting but will automatically be transferred to the game directory for loading.

@@ -1,0 +1,84 @@
+[08:12:37] DCS AI Radio hook loaded
+[08:13:55] Mission loaded - injecting AI Radio script
+[08:13:55] Mission script injected successfully
+[08:13:55] Executing command: atc/get_airbases
+[08:13:55] Airbases: [string "-- DCS AI Radio - Injected Mission Script..."]:17: attempt to index global 'world' (a nil value)
+[08:14:15] Executing command: message/display
+[08:14:16] Executing command: atc/get_airbases
+[08:14:16] Airbases: [string "-- DCS AI Radio - Injected Mission Script..."]:17: attempt to index global 'world' (a nil value)
+[08:14:16] Executing command: atc/get_airbase_info
+[08:14:16] Airbase info: [string "                local info = dcsAiRadio.getActiveRunway("[strin..."]:1: unfinished string near '"[string ")'
+[08:19:02] Mission stopped
+[08:19:49] DCS AI Radio hook loaded
+[08:20:33] Mission loaded - injecting AI Radio script
+[08:20:33] Mission script injected successfully
+[08:20:43] Executing command: message/display
+[08:20:43] Executing command: atc/get_airbases
+[08:20:43] Airbases: [string "                local airbases = coalition.getAirbases(0)..."]:1: attempt to index global 'coalition' (a nil value)
+[08:20:44] Executing command: atc/get_airbase_info
+[08:20:44] Airbase info: [string "                local info = dcsAiRadio.getActiveRunway("[strin..."]:1: unfinished string near '"[string ")'
+[08:31:39] Mission stopped
+[08:32:57] DCS AI Radio hook loaded (v2)
+[08:34:45] Mission loaded - injecting AI Radio script
+[08:34:45] Mission script injected successfully
+[08:40:28] Mission stopped
+[08:52:30] DCS AI Radio hook loaded (v3)
+[08:53:24] Mission loaded - injecting AI Radio script
+[08:53:25] Mission script injected successfully
+[08:58:17] Mission stopped
+[08:59:08] DCS AI Radio hook loaded (v3)
+[09:00:52] Mission loaded - injecting AI Radio script v3
+[09:00:52] Bootstrap injected - full script will load in 3 seconds
+[09:03:35] Mission stopped
+[09:05:02] DCS AI Radio hook loaded (v3)
+[09:06:10] Mission loaded - waiting for simulation start
+[09:06:11] Simulation started - injecting mission script
+[09:06:11] Injection OK
+[09:10:09] Mission stopped
+[09:11:04] DCS AI Radio hook loaded (v3)
+[09:11:52] Mission loaded - waiting for simulation start
+[09:11:52] Simulation started - injecting mission script
+[09:11:52] Injection OK
+[09:13:38] Mission stopped
+[09:16:34] DCS AI Radio hook loaded (v3)
+[09:17:25] Mission loaded - waiting for simulation start
+[09:17:25] Simulation started - injecting mission script
+[09:17:25] Injection OK
+[09:17:56] Mission stopped
+[09:20:30] DCS AI Radio hook loaded (v3)
+[09:21:12] Mission loaded - waiting for simulation start
+[09:21:13] Simulation started - injecting mission script
+[09:21:13] Building Inejectin Script Ran
+[09:21:13] Injection OK
+[09:22:40] Mission stopped
+[09:22:48] Mission loaded - waiting for simulation start
+[09:22:48] Simulation started - injecting mission script
+[09:22:48] Building Inejectin Script Ran
+[09:22:48] Injection OK
+[09:23:51] Mission stopped
+[09:23:59] Mission loaded - waiting for simulation start
+[09:23:59] Simulation started - injecting mission script
+[09:23:59] Building Inejectin Script Ran
+[09:23:59] Injection OK
+[09:25:46] Mission stopped
+[09:27:08] DCS AI Radio hook loaded (v3)
+[09:28:04] Mission loaded - waiting for simulation start
+[09:28:04] Simulation started - injecting mission script
+[09:28:04] dostring result: [[string "        if trigger and trigger.action then..."]:4: attempt to index global 'io' (a nil value)] err: [false]
+[09:30:17] Mission stopped
+[09:31:40] DCS AI Radio hook loaded (v3)
+[09:32:52] Mission loaded - injecting AI Radio script v3
+[09:32:52] dostring result: [[string "        if trigger and trigger.action then..."]:4: attempt to index global 'io' (a nil value)] err: [false]
+[09:32:53] Simulation started
+[09:34:28] Mission stopped
+[09:35:59] DCS AI Radio hook loaded (v3)
+[09:37:51] Mission loaded - injecting AI Radio script v3
+[09:37:51] dostring result: [[string "dcsAiRadio = {}..."]:194: attempt to index global 'timer' (a nil value)] err: [false]
+[09:37:51] Simulation started
+[09:38:30] Mission stopped
+[09:40:36] DCS AI Radio hook loaded (v3)
+[09:41:33] Mission loaded - injecting function definitions
+[09:41:33] dostring result: [[string "dcsAiRadio = {}..."]:194: attempt to index global 'io' (a nil value)] err: [false]
+[09:41:33] Simulation started - starting poll loop
+[09:41:33] Poll loop result: [[string "        timer.scheduleFunction(dcsAiRadio.poll, nil, timer.getTime() + 1)..."]:1: attempt to index global 'timer' (a nil value)] err: [false]
+[09:45:13] Mission stopped
