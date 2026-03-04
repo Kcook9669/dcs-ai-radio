@@ -201,6 +201,32 @@ class BattlefieldState:
                 "staleness": round(time.time() - self.last_update, 1) if self.last_update > 0 else None
             }
 
+    def get_hostile_units_with_positions(self) -> tuple:
+        """Return (hostile_unit_dicts, (player_lat, player_lon)). Thread-safe.
+
+        Each dict has: id, name, type, lat, lon, alt_m, heading.
+        Returns only alive units whose coalition differs from the player's.
+        """
+        with self._lock:
+            plat = self.player.position.lat
+            plon = self.player.position.lon
+            player_coa = self.player.coalition.lower()
+            hostiles = [
+                {
+                    "id":      u.id or u.name,
+                    "name":    u.name,
+                    "type":    u.unit_type,
+                    "lat":     u.position.lat,
+                    "lon":     u.position.lon,
+                    "alt_m":   u.position.alt_m,
+                    "heading": u.heading,
+                }
+                for u in self.units
+                if u.is_alive
+                and u.coalition.lower() not in (player_coa, "neutral", "unknown")
+            ]
+            return hostiles, (plat, plon)
+
     def build_context_string(self) -> str:
         """Build a concise battlefield summary for LLM context injection."""
         snap = self.get_snapshot()

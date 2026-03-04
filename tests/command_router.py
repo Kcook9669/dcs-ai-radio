@@ -12,8 +12,11 @@
 # =============================================================================
 
 import json
+import os
+import re
 import time
 import requests
+from pathlib import Path
 
 # =============================================================================
 # DCS RADIO MENU TREES
@@ -160,6 +163,103 @@ ALL_COMMANDS = {
 
 
 # =============================================================================
+# TIER 1 — STATIC ADDRESSEE MAP
+# First 1-2 meaningful words → immediate routing (no LLM call).
+# Keys are lowercase; values must match ALL_COMMANDS categories.
+# =============================================================================
+FILLER_WORDS = {"uh", "um", "hey", "yeah", "yes", "okay", "ok", "so", "like", "well", "er"}
+
+ADDRESSEE_MAP = {
+    # ATC addressees
+    "tower":      {"category": "atc",        "action": "none"},
+    "approach":   {"category": "atc",        "action": "none"},
+    "departure":  {"category": "atc",        "action": "none"},
+    "control":    {"category": "atc",        "action": "none"},
+    "ground":     {"category": "atc",        "action": "none"},
+    "atis":       {"category": "atc",        "action": "none"},
+    "radar":      {"category": "atc",        "action": "none"},
+    "mayday":     {"category": "atc",        "action": "declare_emergency"},
+    "pan":        {"category": "atc",        "action": "declare_emergency"},
+    # JTAC addressees
+    "jtac":       {"category": "jtac",       "action": "none"},
+    "overlord":   {"category": "jtac",       "action": "none"},
+    "darkstar":   {"category": "jtac",       "action": "none"},
+    "axeman":     {"category": "jtac",       "action": "none"},
+    # Wingman callsigns
+    "two":        {"category": "wingman",    "action": "none"},
+    "three":      {"category": "wingman",    "action": "none"},
+    "four":       {"category": "wingman",    "action": "none"},
+    "wingman":    {"category": "wingman",    "action": "none"},
+    "dash":       {"category": "wingman",    "action": "none"},
+    # Ground crew
+    "crew":       {"category": "ground_crew","action": "none"},
+    "armorers":   {"category": "ground_crew","action": "none"},
+    "maintenance":{"category": "ground_crew","action": "none"},
+}
+
+
+def _normalize_key(text: str, max_words: int = 3) -> str:
+    """Strip filler words, lowercase, take first max_words meaningful words."""
+    words = re.sub(r"[^\w\s]", "", text.lower()).split()
+    meaningful = [w for w in words if w not in FILLER_WORDS]
+    return " ".join(meaningful[:max_words])
+
+
+# =============================================================================
+# TIER 2 — LEARNED ROUTING CACHE
+# Persists high-confidence LLM classifications across sessions.
+# Grows automatically; delete routing_cache.json to reset.
+# =============================================================================
+CACHE_FILE = Path(__file__).parent / "routing_cache.json"
+LEARN_THRESHOLD = 0.85   # Minimum LLM confidence to cache a result
+
+
+class RoutingCache:
+    def __init__(self, path: Path = CACHE_FILE):
+        self.path = path
+        self._cache: dict = {}
+        self._load()
+
+    def _load(self):
+        if self.path.exists():
+            try:
+                self._cache = json.loads(self.path.read_text())
+            except (json.JSONDecodeError, OSError):
+                self._cache = {}
+
+    def _save(self):
+        try:
+            self.path.write_text(json.dumps(self._cache, indent=2))
+        except OSError:
+            pass
+
+    def lookup(self, text: str) -> dict | None:
+        key = _normalize_key(text)
+        entry = self._cache.get(key)
+        if entry:
+            entry["hits"] = entry.get("hits", 0) + 1
+            self._save()
+            return {k: v for k, v in entry.items() if k != "hits"}
+        return None
+
+    def learn(self, text: str, result: dict, confidence: float):
+        if confidence < LEARN_THRESHOLD:
+            return
+        if result.get("category", "none") == "none":
+            return
+        key = _normalize_key(text)
+        existing = self._cache.get(key, {})
+        self._cache[key] = {
+            "category": result["category"],
+            "action":   result["action"],
+            "role":     result.get("role", result["category"]),
+            "model":    result.get("model", "llama3.2:3b"),
+            "hits":     existing.get("hits", 0),
+        }
+        self._save()
+
+
+# =============================================================================
 # INTENT CLASSIFIER
 # Uses the LLM to classify what the player wants
 # =============================================================================
@@ -201,12 +301,19 @@ Player transmission: "{player_text}"
 
 
 class CommandRouter:
-    """Routes player voice commands to DCS key sequences."""
+    """Routes player voice commands to DCS key sequences.
+
+    Three-tier routing:
+      1. Static addressee map   (instant, no LLM)
+      2. Learned phrase cache   (instant, grows from LLM hits)
+      3. LLM classification     (slow fallback; high-confidence results → cache)
+    """
 
     def __init__(self, ollama_url="http://localhost:11434/api/generate",
                  classify_model="llama3.2:3b"):
         self.ollama_url = ollama_url
         self.classify_model = classify_model
+        self.cache = RoutingCache()
 
     def classify_intent(self, player_text: str) -> dict:
         """Use LLM to classify the player's radio transmission."""
@@ -265,25 +372,48 @@ class CommandRouter:
         return "llama3.2:3b"
 
     def route(self, player_text: str, aircraft: str = None) -> dict:
-        """Full routing pipeline: classify → get keys → select voice + model."""
-        print(f"\n🔀 Routing command...")
+        """Full routing pipeline: tier 1 → tier 2 → tier 3 (LLM)."""
+        print(f"\n🔀 Routing...")
         start = time.time()
 
-        # Classify intent
-        intent = self.classify_intent(player_text)
-        category = intent.get("category", "none").lower()
-        action = intent.get("action", "none").lower()
-        confidence = intent.get("confidence", 0.0)
+        category = action = "none"
+        confidence = 0.0
+        tier_label = "llm"
+
+        # --- Tier 1: static addressee keyword ---
+        first_words = _normalize_key(player_text, max_words=2).split()
+        for word in first_words:
+            if word in ADDRESSEE_MAP:
+                hit = ADDRESSEE_MAP[word]
+                category = hit["category"]
+                action = hit["action"]
+                confidence = 1.0
+                tier_label = "keyword"
+                break
+
+        # --- Tier 2: learned phrase cache ---
+        if category == "none":
+            cached = self.cache.lookup(player_text)
+            if cached:
+                category = cached["category"]
+                action = cached["action"]
+                confidence = 1.0
+                tier_label = "cache"
+
+        # --- Tier 3: LLM classification ---
+        if category == "none":
+            intent = self.classify_intent(player_text)
+            category = intent.get("category", "none").lower()
+            action = intent.get("action", "none").lower()
+            confidence = intent.get("confidence", 0.0)
+            tier_label = "llm"
 
         elapsed = time.time() - start
-        print(f"  ✓ [{elapsed:.1f}s] Intent: {category}/{action} (confidence: {confidence})")
+        print(f"  ✓ [{elapsed:.2f}s] [{tier_label}] {category}/{action} (conf: {confidence:.2f})")
 
-        # Get key sequence
-        keys = self.get_key_sequence(category, action, aircraft)
-
-        # Get role and model
         role = self.get_role_for_category(category)
         model = self.get_model_for_category(category)
+        keys = self.get_key_sequence(category, action, aircraft)
 
         result = {
             "category": category,
@@ -291,15 +421,17 @@ class CommandRouter:
             "confidence": confidence,
             "keys": keys,
             "role": role,
-            "model": model
+            "model": model,
+            "tier": tier_label,
         }
 
-        if keys:
-            print(f"  ✓ Key sequence: {' → '.join(keys)}")
-        else:
-            print(f"  ⚠ No key mapping found for {category}/{action}")
+        # Teach tier 2 from LLM results
+        if tier_label == "llm":
+            self.cache.learn(player_text, result, confidence)
 
-        print(f"  ✓ Voice role: {role} | LLM model: {model}")
+        if keys:
+            print(f"  ✓ Keys: {' → '.join(keys)}")
+        print(f"  ✓ Role: {role} | Model: {model}")
 
         return result
 

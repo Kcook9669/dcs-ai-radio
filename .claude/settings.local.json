@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(venv/Scripts/python -c \"import librosa; print\\(librosa.__version__\\)\")",
+      "Bash(venv/Scripts/python -c \"import faster_whisper; print\\(faster_whisper.__version__\\)\")",
+      "Bash(venv/Scripts/python -c \"import pynput; print\\(pynput.__version__\\)\")",
+      "Bash(venv/Scripts/pip install pynput -q)"
+    ]
+  }
+}

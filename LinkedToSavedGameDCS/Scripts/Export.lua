@@ -116,13 +116,13 @@ end
 local COMMANDS_DIR = lfs.writedir() .. "Scripts\\commands\\"
 
 local function loadCommandAddons()
-    local ok, iter = pcall(lfs.dir, COMMANDS_DIR)
-    if not ok then return end
-    for filename in iter do
-        if filename:match("%.lua$") then
-            pcall(dofile, COMMANDS_DIR .. filename)
+    pcall(function()
+        for filename in lfs.dir(COMMANDS_DIR) do
+            if filename:match("%.lua$") then
+                pcall(dofile, COMMANDS_DIR .. filename)
+            end
         end
-    end
+    end)
 end
 
 -- In LuaExportStart(), add:
@@ -171,22 +171,36 @@ local function getPlayerData()
     local self = LoGetSelfData()
     if self == nil then return nil end
 
+    -- Normalize coalition: DCS Export returns CoalitionID (0=neutral,1=red,2=blue)
+    local coa = "Neutral"
+    if self.CoalitionID == 1 then coa = "Red"
+    elseif self.CoalitionID == 2 then coa = "Blue"
+    elseif self.Coalition then
+        local c = string.upper(self.Coalition)
+        if c == "RED" then coa = "Red"
+        elseif c == "BLUE" then coa = "Blue"
+        end
+    end
+
     return {
         callsign      = self.UnitName or self.Name or "Unknown",
         type          = self.Name or "Unknown",
-        coalition     = self.Coalition or "Unknown",
+        coalition     = coa, -- Use the normalized variable
         country       = self.Country or "Unknown",
         position      = {
             lat   = self.LatLongAlt and self.LatLongAlt.Lat  or 0,
             lon   = self.LatLongAlt and self.LatLongAlt.Long or 0,
             alt_m = self.LatLongAlt and self.LatLongAlt.Alt  or 0
         },
-        heading       = LoGetHeading             and LoGetHeading()             or 0,
+        heading       = LoGetHeading                 and LoGetHeading()             or 0,
         ias_mps       = LoGetIndicatedAirSpeed   and LoGetIndicatedAirSpeed()   or 0,
         altitude_asl  = LoGetAltitudeAboveSeaLevel    and LoGetAltitudeAboveSeaLevel()    or 0,
         altitude_agl  = LoGetAltitudeAboveGroundLevel and LoGetAltitudeAboveGroundLevel() or 0,
         mach          = LoGetMachNumber          and LoGetMachNumber()          or 0,
-        fuel_internal = LoGetEngineInfo          and LoGetEngineInfo().fuel_internal or 0
+        fuel_internal = (function()
+            local ei = LoGetEngineInfo and LoGetEngineInfo()
+            return (ei and ei.fuel_internal) or 0
+        end)()
     }
 end
 
@@ -195,11 +209,22 @@ local function getWorldObjects()
     local raw = LoGetWorldObjects("units") or {}
 
     for id, obj in pairs(raw) do
+        -- Normalize coalition: DCS Export returns CoalitionID (0=neutral,1=red,2=blue)
+        local coa = "Neutral"
+        if obj.CoalitionID == 1 then coa = "Red"
+        elseif obj.CoalitionID == 2 then coa = "Blue"
+        elseif obj.Coalition then
+            local c = string.upper(obj.Coalition)
+            if c == "RED" then coa = "Red"
+            elseif c == "BLUE" then coa = "Blue"
+            end
+        end
+
         objects[#objects + 1] = {
             id        = id,
             name      = obj.Name     or "Unknown",
             type      = obj.Name     or "Unknown",
-            coalition = obj.Coalition or "Unknown",
+            coalition = coa, -- Use the normalized variable
             country   = obj.Country  or "Unknown",
             position  = {
                 lat   = obj.LatLongAlt and obj.LatLongAlt.Lat  or 0,
@@ -219,24 +244,6 @@ local function getWorldObjects()
     return objects
 end
 
-local function getThreatInfo()
-    local threats = {}
-    local tws = LoGetTWSInfo and LoGetTWSInfo() or nil
-
-    if tws and tws.Emitters then
-        for i, emitter in pairs(tws.Emitters) do
-            threats[#threats + 1] = {
-                type        = emitter.Type and emitter.Type.level3 or "Unknown",
-                azimuth     = emitter.Azimuth   or 0,
-                priority    = emitter.Priority  or 0,
-                signal_type = emitter.SignalType or "Unknown"
-            }
-        end
-    end
-
-    return threats
-end
-
 local function getMissionTime()
     return LoGetModelTime() or 0
 end
@@ -244,6 +251,10 @@ end
 -- =============================================================================
 -- EXPORT CALLBACKS
 -- =============================================================================
+local function getThreatInfo()
+    return {}  -- Placeholder; Phase 3 will populate this via JTAC data
+end
+
 function LuaExportStart()
     os.execute('mkdir "' .. OUTPUT_DIR .. '" 2>nul')
 
@@ -264,23 +275,25 @@ end
 
 function LuaExportActivityNextEvent(t)
     -- Always poll for commands on every tick (every 0.05s)
-    pollCommands()
+    pcall(pollCommands)
 
     -- State export runs at the slower SEND_INTERVAL rate
     if t - lastSendTime >= SEND_INTERVAL then
         lastSendTime = t
 
-        local player = getPlayerData()
-        if player then
-            local state = {
-                event     = "state",
-                timestamp = getMissionTime(),
-                player    = player,
-                units     = getWorldObjects(),
-                threats   = getThreatInfo()
-            }
-            writeFile(OUTPUT_DIR .. "state.json", toJSON(state))
-        end
+        pcall(function()
+            local player = getPlayerData()
+            if player then
+                local state = {
+                    event     = "state",
+                    timestamp = getMissionTime(),
+                    player    = player,
+                    units     = getWorldObjects(),
+                    threats   = getThreatInfo()
+                }
+                writeFile(OUTPUT_DIR .. "state.json", toJSON(state))
+            end
+        end)
     end
 
     return t + 0.05

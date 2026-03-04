@@ -1,0 +1,89 @@
+[11:36:37] DCS AI Radio Mission Script Initialized
+[11:36:45] Received command: {"category": "atc", "action": "get_airbases", "timestamp": 1772559378.6038592}
+[11:36:45] Wrote result: Anapa-Vityazevo,Novorossiysk,Krymsk,Gelendzhik,Sochi-Adler,Sukhumi-Babushara,Gudauta,Batumi,Senaki-Kolkhi,Kobuleti,Kutaisi,Mineralnye Vody,Nalchik,Mozdok,Tbilisi-Lochini,Soganlug,Vaziani,Beslan,Krasnodar-Center,Krasnodar-Pashkovsky,Maykop-Khanskaya
+[11:37:01] Received command: {"category": "message", "action": "display", "timestamp": 1772559421.7561421, "text": "DCS AI Radio connected!", "duration": 5}
+[11:37:01] Wrote result: message_sent
+[11:37:02] Received command: {"category": "atc", "action": "get_airbases", "timestamp": 1772559421.8638368}
+[11:37:02] Wrote result: Anapa-Vityazevo,Novorossiysk,Krymsk,Gelendzhik,Sochi-Adler,Sukhumi-Babushara,Gudauta,Batumi,Senaki-Kolkhi,Kobuleti,Kutaisi,Mineralnye Vody,Nalchik,Mozdok,Tbilisi-Lochini,Soganlug,Vaziani,Beslan,Krasnodar-Center,Krasnodar-Pashkovsky,Maykop-Khanskaya
+[11:37:02] Received command: {"category": "atc", "action": "get_airbase_info", "timestamp": 1772559422.119946, "airbase": "Anapa-Vityazevo"}
+[11:37:02] Wrote result: error:unhandled
+[11:42:38] Received command: {"category": "message", "action": "display", "timestamp": 1772559758.58694, "text": "DCS AI Radio connected!", "duration": 5}
+[11:42:38] Wrote result: message_sent
+[11:42:38] Received command: {"category": "atc", "action": "get_airbases", "timestamp": 1772559758.6399922}
+[11:42:38] Wrote result: Anapa-Vityazevo,Novorossiysk,Krymsk,Gelendzhik,Sochi-Adler,Sukhumi-Babushara,Gudauta,Batumi,Senaki-Kolkhi,Kobuleti,Kutaisi,Mineralnye Vody,Nalchik,Mozdok,Tbilisi-Lochini,Soganlug,Vaziani,Beslan,Krasnodar-Center,Krasnodar-Pashkovsky,Maykop-Khanskaya
+[11:42:39] Received command: {"category": "atc", "action": "get_airbase_info", "timestamp": 1772559758.894349, "airbase": "Anapa-Vityazevo"}
+[11:42:39] Wrote result: error:unhandled
+[11:43:36] DCS AI Radio Mission Script Initialized
+[11:44:10] Received command: {"category": "message", "action": "display", "timestamp": 1772559850.4470556, "text": "DCS AI Radio connected!", "duration": 5}
+[11:44:10] Wrote result: message_sent
+[11:44:10] Received command: {"category": "atc", "action": "get_airbases", "timestamp": 1772559850.5497954}
+[11:44:10] Wrote result: Anapa-Vityazevo,Novorossiysk,Krymsk,Gelendzhik,Sochi-Adler,Sukhumi-Babushara,Gudauta,Batumi,Senaki-Kolkhi,Kobuleti,Kutaisi,Mineralnye Vody,Nalchik,Mozdok,Tbilisi-Lochini,Soganlug,Vaziani,Beslan,Krasnodar-Center,Krasnodar-Pashkovsky,Maykop-Khanskaya
+[11:44:11] Received command: {"category": "atc", "action": "get_airbase_info", "timestamp": 1772559850.8062382, "airbase": "Anapa-Vityazevo"}
+[11:44:11] Wrote result: wind_from:117,wind_speed_kts:6.2,temp:19,pressure:755
+[12:01:43] DCS AI Radio Mission Script Initialized
+[12:09:25] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772561365.0746}
+[12:09:58] DCS AI Radio Mission Script Initialized
+[12:14:02] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772561642.1777105}
+[12:22:13] DCS AI Radio Mission Script Initialized
+[12:23:07] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772562187.8070219}
+[12:29:40] DCS AI Radio Mission Script Initialized
+[12:31:21] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772562681.0062754}
+[12:48:48] DCS AI Radio Mission Script Initialized
+[12:55:08] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772564108.4906566}
+[12:55:08] POLL ERROR: [string "C:\Users\kcook\Saved Games\DCS\Scripts\dcs-ai-radio-mission.lua"]:78: attempt to call field 'getPlayerUnit' (a nil value)
+[12:56:05] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772564165.240181}
+[12:56:05] POLL ERROR: [string "C:\Users\kcook\Saved Games\DCS\Scripts\dcs-ai-radio-mission.lua"]:78: attempt to call field 'getPlayerUnit' (a nil value)
+[13:12:22] DCS AI Radio Mission Script Initialized
+[13:14:00] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772565239.9863174}
+[13:14:00] POLL ERROR: [string "C:\Users\kcook\Saved Games\DCS\Scripts\dcs-ai-radio-mission.lua"]:78: attempt to call field 'getPlayerUnit' (a nil value)
+[13:16:23] DCS AI Radio Mission Script Initialized
+[13:22:46] DCS AI Radio Mission Script Initialized
+[13:40:34] DCS AI Radio Mission Script Initialized
+[13:42:02] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772566921.6719158}
+[13:42:02] Wrote result: Maykop-Khanskaya
+[13:42:02] Received command: {"category": "atc", "action": "get_airbase_info", "timestamp": 1772566922.1278005, "airbase": "Maykop-Khanskaya"}
+[13:42:02] Wrote result: wind_from:116,wind_speed_kts:7.3,temp:18,pressure:743
+[13:44:07] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772567047.8141053}
+[13:44:07] Wrote result: Maykop-Khanskaya
+[13:44:08] Received command: {"category": "atc", "action": "get_airbase_info", "timestamp": 1772567047.9180305, "airbase": "Maykop-Khanskaya"}
+[13:44:08] Wrote result: wind_from:116,wind_speed_kts:7.3,temp:18,pressure:743
+[13:54:22] DCS AI Radio Mission Script Initialized
+[13:56:37] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772567797.7284672}
+[13:56:37] Wrote result: Maykop-Khanskaya
+[13:56:38] Received command: {"category": "atc", "action": "get_airbase_info", "timestamp": 1772567797.93545, "airbase": "Maykop-Khanskaya"}
+[13:56:38] Wrote result: wind_from:116,wind_speed_kts:7.3,temp:18,pressure:743
+[14:01:22] DCS AI Radio Mission Script Initialized
+[14:15:18] DCS AI Radio Mission Script Initialized
+[07:27:34] DCS AI Radio Mission Script Initialized
+[07:29:48] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772630988.150635}
+[07:29:48] Wrote result: Ge FARP (London)
+[08:55:00] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772636100.7905016}
+[08:55:00] Wrote result: Ge FARP (London)
+[13:17:34] Silenced ATC at: Anapa-Vityazevo
+[13:17:34] Silenced ATC at: Krasnodar-Center
+[13:17:34] Silenced ATC at: Novorossiysk
+[13:17:34] Silenced ATC at: Krymsk
+[13:17:34] Silenced ATC at: Maykop-Khanskaya
+[13:17:34] Silenced ATC at: Gelendzhik
+[13:17:34] Silenced ATC at: Sochi-Adler
+[13:17:34] Silenced ATC at: Krasnodar-Pashkovsky
+[13:17:34] Silenced ATC at: Sukhumi-Babushara
+[13:17:34] Silenced ATC at: Gudauta
+[13:17:34] Silenced ATC at: Batumi
+[13:17:34] Silenced ATC at: Senaki-Kolkhi
+[13:17:34] Silenced ATC at: Kobuleti
+[13:17:34] Silenced ATC at: Kutaisi
+[13:17:34] Silenced ATC at: Mineralnye Vody
+[13:17:34] Silenced ATC at: Nalchik
+[13:17:34] Silenced ATC at: Mozdok
+[13:17:34] Silenced ATC at: Tbilisi-Lochini
+[13:17:34] Silenced ATC at: Soganlug
+[13:17:34] Silenced ATC at: Vaziani
+[13:17:34] Silenced ATC at: Beslan
+[13:17:34] Silenced ATC at: US FARP ( Dallas)
+[13:17:34] Silenced ATC at: Ge FARP (London)
+[13:17:34] DCS AI Radio Mission Script Initialized
+[13:25:16] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772652316.4553258}
+[13:25:16] Wrote result: Vaziani
+[14:08:13] Received command: {"category": "atc", "action": "get_closest_airbase", "timestamp": 1772654892.968304}
+[14:08:13] Wrote result: Vaziani

@@ -8,6 +8,7 @@ import json
 import time
 import os
 from pathlib import Path
+from autopatcher import patch_dcs_mission_scripting
 
 # =============================================================================
 # CONFIG
@@ -19,7 +20,7 @@ RESULT_FILE = SHARED_DIR / "result.json"
 HOOK_STATUS_FILE = SHARED_DIR / "hook_status.json"
 
 # =============================================================================
-# COMMAND BRIDGE
+# COMMAND BRIDGE.
 # =============================================================================
 class DCSCommandBridge:
     """Sends commands to DCS and reads results via file-based IPC."""
@@ -40,7 +41,7 @@ class DCSCommandBridge:
             pass
         return False
 
-    def send_command(self, category, action, timeout=3.0, **kwargs):
+    def send_command(self, category, action, timeout=1.0, **kwargs):
         """Send a command to DCS and wait for the result."""
         command = {
             "category": category,
@@ -117,11 +118,20 @@ class DCSCommandBridge:
         """Display a text message in DCS."""
         return self.send_command("message", "display", text=text, duration=duration)
 
+    def jtac_command(self, action, **kwargs):
+        """Send a command to the JTAC handler."""
+        return self.send_command("jtac", action, **kwargs)
+
+    def ground_crew_command(self, action, **kwargs):
+        """Send a command to the ground crew handler."""
+        return self.send_command("ground_crew", action, **kwargs)
+
 
 # =============================================================================
 # STANDALONE TEST
 # =============================================================================
 if __name__ == "__main__":
+    patch_dcs_mission_scripting()
     print("=" * 60)
     print("DCS AI Radio - Command Bridge Test")
     print("=" * 60)

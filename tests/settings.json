@@ -1,0 +1,31 @@
+{
+  "roles": {
+    "atc": {
+      "enabled": true,
+      "volume": 29,
+      "speed": 1
+    },
+    "jtac": {
+      "enabled": true,
+      "volume": 32,
+      "speed": 1
+    },
+    "wingman": {
+      "enabled": true,
+      "volume": 30,
+      "speed": 1
+    },
+    "ground_crew": {
+      "enabled": true,
+      "volume": 26,
+      "speed": 1
+    },
+    "awacs": {
+      "enabled": true,
+      "volume": 26,
+      "speed": 1
+    }
+  },
+  "awacs_range_nm": 74,
+  "awacs_debug": true
+}

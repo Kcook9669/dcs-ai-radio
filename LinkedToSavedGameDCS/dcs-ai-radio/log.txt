@@ -1,2 +1,2 @@
-DCS AI Radio export started at Tue Mar  3 09:41:30 2026
+DCS AI Radio export started at Wed Mar  4 13:18:14 2026
 Output dir: C:\Users\kcook\Saved Games\DCS\dcs-ai-radio\

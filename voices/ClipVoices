@@ -1,0 +1,33 @@
+import subprocess
+from pathlib import Path
+
+# Set paths based on your project structure
+clips_dir = Path("voices/clips")
+output_dir = clips_dir / "trimmed"
+
+# Create a subfolder for the output so we don't overwrite the originals yet
+output_dir.mkdir(exist_ok=True)
+
+print("Starting batch trim...")
+
+for wav_file in clips_dir.glob("*.wav"):
+    output_file = output_dir / wav_file.name
+    
+    # FFmpeg arguments:
+    # -y : Overwrite output without asking
+    # -t 9.5 : Trim to 9.5 seconds
+    # -ar 24000 : Enforce 24kHz sample rate
+    # -ac 1 : Enforce mono audio
+    cmd = [
+        "ffmpeg", "-y", 
+        "-i", str(wav_file), 
+        "-t", "9.5", 
+        "-ar", "24000", 
+        "-ac", "1", 
+        str(output_file)
+    ]
+    
+    print(f"  Trimming {wav_file.name}...")
+    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+print(f"\nDone! Your 24kHz mono trimmed files are in: {output_dir}")
